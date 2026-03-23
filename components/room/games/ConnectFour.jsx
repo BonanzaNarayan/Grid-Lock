@@ -7,32 +7,7 @@ import {
   getWinningLine,
 } from "@/lib/gameLogic/connectFour";
 
-// column hover indicator
-function ColIndicator({ active, mark }) {
-  return (
-    <div className="flex items-center justify-center h-6">
-      <AnimatePresence>
-        {active && (
-          <motion.div
-            initial={{ opacity: 0, y: -6 }}
-            animate={{ opacity: 1, y: 0  }}
-            exit={{   opacity: 0, y: -6  }}
-            transition={{ duration: 0.15 }}
-            className="w-4 h-4 rounded-full"
-            style={{
-              background: mark === "X"
-                ? "var(--player-x)"
-                : "var(--player-o)",
-            }}
-          />
-        )}
-      </AnimatePresence>
-    </div>
-  );
-}
-
-// single cell
-function Cell({ value, isWin, isDropping, rowIndex, mark }) {
+function Cell({ value, isWin, isDropping, rowIndex }) {
   const color =
     value === "X" ? "var(--player-x)"
     : value === "O" ? "var(--player-o)"
@@ -40,18 +15,18 @@ function Cell({ value, isWin, isDropping, rowIndex, mark }) {
 
   return (
     <motion.div
-      className="relative flex items-center justify-center rounded-full"
+      className="relative w-full flex items-center justify-center"
       style={{ aspectRatio: "1" }}
       animate={
         isWin
           ? {
               boxShadow: [
-                `0 0 0px 0px ${color}`,
+                `0 0 0px  0px ${color}`,
                 `0 0 16px 4px ${color}`,
-                `0 0 0px 0px ${color}`,
+                `0 0 0px  0px ${color}`,
               ],
             }
-          : {}
+          : { boxShadow: "none" }
       }
       transition={
         isWin
@@ -62,16 +37,18 @@ function Cell({ value, isWin, isDropping, rowIndex, mark }) {
       <AnimatePresence>
         {value && (
           <motion.div
-            key={`${value}-${rowIndex}`}
-            className="absolute inset-0.5 rounded-full"
-            style={{ background: color }}
-            initial={{ y: isDropping ? "-400%" : 0, opacity: isDropping ? 0.6 : 1 }}
+            key={`piece-${rowIndex}-${value}`}
+            className="absolute rounded-full"
+            style={{
+              inset:      "8%",
+              background: color,
+            }}
+            initial={{ y: isDropping ? "-500%" : 0, opacity: isDropping ? 0.7 : 1 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{
               type:      "spring",
-              stiffness: 300,
-              damping:   28,
-              duration:  0.4,
+              stiffness: 280,
+              damping:   26,
             }}
           />
         )}
@@ -80,23 +57,32 @@ function Cell({ value, isWin, isDropping, rowIndex, mark }) {
   );
 }
 
-export function ConnectFour({ board, currentTurn, myMark, status, onMove, boardSize = "standard" }) {
-  const { rows, cols }  = getConfig(boardSize);
+export function ConnectFour({
+  board,
+  currentTurn,
+  myMark,
+  status,
+  onMove,
+  boardSize = "standard",
+}) {
+  const { rows, cols }      = getConfig(boardSize);
   const [hoverCol, setHoverCol] = useState(null);
-  const [lastDrop, setLastDrop] = useState(null); // { col, row } of most recent drop
+  const [lastDrop, setLastDrop] = useState(null);
 
-  const winLine  = useMemo(() => getWinningLine(board, boardSize), [board, boardSize]);
-  const canMove  = status === "active" && currentTurn === myMark;
+  const winLine = useMemo(
+    () => getWinningLine(board, boardSize),
+    [board, boardSize]
+  );
+  const canMove = status === "active" && currentTurn === myMark;
 
   function handleColClick(col) {
     if (!canMove) return;
     const row = getLowestEmptyRow(board, col, rows, cols);
-    if (row === -1) return; // column full
+    if (row === -1) return;
     setLastDrop({ col, row });
     onMove({ col, row, index: row * cols + col });
   }
 
-  // build grid rows for rendering
   const grid = Array.from({ length: rows }, (_, r) =>
     Array.from({ length: cols }, (_, c) => ({
       value: board[r * cols + c],
@@ -108,28 +94,54 @@ export function ConnectFour({ board, currentTurn, myMark, status, onMove, boardS
 
   return (
     <div
-      className="flex flex-col items-center gap-1 select-none"
+      className="flex flex-col gap-0 w-full select-none"
       onMouseLeave={() => setHoverCol(null)}
     >
-      {/* column hover indicators */}
+      {/* ── hover indicator row — FIXED height, always rendered ── */}
       <div
-        className="grid gap-1 w-full"
-        style={{ gridTemplateColumns: `repeat(${cols}, 1fr)` }}
+        className="grid w-full"
+        style={{
+          gridTemplateColumns: `repeat(${cols}, 1fr)`,
+          height: "28px",        // fixed height — never changes
+          gap:    "6px",
+          padding: "0 2px",
+        }}
       >
         {Array.from({ length: cols }, (_, c) => (
-          <ColIndicator key={c} active={hoverCol === c && canMove} mark={myMark} />
+          <div
+            key={c}
+            className="flex items-center justify-center"
+          >
+            {/* piece preview — opacity transition only, no height change */}
+            <motion.div
+              className="w-4 h-4 rounded-full"
+              animate={{
+                opacity: hoverCol === c && canMove ? 1 : 0,
+                scale:   hoverCol === c && canMove ? 1 : 0.5,
+              }}
+              transition={{ duration: 0.12 }}
+              style={{
+                background: myMark === "X"
+                  ? "var(--player-x)"
+                  : "var(--player-o)",
+                pointerEvents: "none",
+              }}
+            />
+          </div>
         ))}
       </div>
 
-      {/* board */}
+      {/* ── board ── */}
       <div
-        className="relative bg-card border border-border rounded-sm p-2 w-full"
+        className="relative rounded-sm overflow-hidden w-full"
         style={{
           background: "var(--card)",
-          boxShadow:  "inset 0 2px 8px rgba(0,0,0,0.4)",
+          border:     "1px solid var(--border)",
+          padding:    "6px",
+          boxShadow:  "inset 0 2px 10px rgba(0,0,0,0.35)",
         }}
       >
-        {/* column click zones */}
+        {/* invisible column click zones on top */}
         <div
           className="absolute inset-0 grid z-10"
           style={{ gridTemplateColumns: `repeat(${cols}, 1fr)` }}
@@ -140,35 +152,41 @@ export function ConnectFour({ board, currentTurn, myMark, status, onMove, boardS
             return (
               <div
                 key={c}
-                className={isOpen ? "cursor-pointer" : "cursor-default"}
-                onMouseEnter={() => isOpen && setHoverCol(c)}
+                style={{ cursor: isOpen ? "pointer" : "default" }}
+                onMouseEnter={() => canMove && row !== -1 && setHoverCol(c)}
                 onClick={() => handleColClick(c)}
               />
             );
           })}
         </div>
 
-        {/* cells grid */}
+        {/* cells */}
         <div
-          className="grid gap-1.5"
-          style={{ gridTemplateColumns: `repeat(${cols}, 1fr)` }}
+          className="grid w-full"
+          style={{
+            gridTemplateColumns: `repeat(${cols}, 1fr)`,
+            gap: "6px",
+          }}
         >
           {grid.map((row) =>
             row.map(({ value, index, row: r, col: c }) => {
               const isWin      = winLine?.includes(index) ?? false;
-              const isDropping = lastDrop?.col === c && lastDrop?.row === r && !!value;
+              const isDropping =
+                lastDrop?.col === c && lastDrop?.row === r && !!value;
               return (
                 <div
                   key={index}
-                  className="bg-background rounded-full overflow-hidden"
-                  style={{ aspectRatio: "1" }}
+                  className="rounded-full overflow-hidden"
+                  style={{
+                    aspectRatio: "1",
+                    background:  "var(--background)",
+                  }}
                 >
                   <Cell
                     value={value}
                     isWin={isWin}
                     isDropping={isDropping}
                     rowIndex={r}
-                    mark={value === "X" ? "X" : "O"}
                   />
                 </div>
               );
@@ -177,15 +195,25 @@ export function ConnectFour({ board, currentTurn, myMark, status, onMove, boardS
         </div>
       </div>
 
-      {/* column numbers — helps on mobile */}
+      {/* ── column numbers — FIXED height, always rendered ── */}
       <div
-        className="grid gap-1 w-full"
-        style={{ gridTemplateColumns: `repeat(${cols}, 1fr)` }}
+        className="grid w-full"
+        style={{
+          gridTemplateColumns: `repeat(${cols}, 1fr)`,
+          height: "20px",        // fixed height — never changes
+          gap:    "6px",
+          padding: "2px 2px 0",
+        }}
       >
         {Array.from({ length: cols }, (_, c) => (
           <span
             key={c}
-            className="font-mono text-[9px] text-muted-foreground text-center"
+            className="font-mono text-center"
+            style={{
+              fontSize:   "9px",
+              color:      "var(--muted-foreground)",
+              lineHeight: "1",
+            }}
           >
             {c + 1}
           </span>
