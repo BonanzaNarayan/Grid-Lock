@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import { getAvatar } from "@/lib/avatars";
 import { Globe } from "lucide-react";
+import { NotificationBell } from "@/components/notifications/NotificationBell";
 
 const links = [
   { label: "Play",     href: "/dashboard",          icon: Gamepad2  },
@@ -71,6 +72,11 @@ export function DashboardNav({ mobile = false }) {
             </button>
           );
         })}
+        <div
+          className="flex flex-col items-center gap-1 flex-1 py-3 relative"
+        >
+          <NotificationBell />
+        </div>
         <button
           onClick={handleLogout}
           className="flex flex-col items-center gap-1 flex-1"
@@ -95,13 +101,17 @@ export function DashboardNav({ mobile = false }) {
     >
 
       {/* logo */}
-      <div className="px-3 mb-6">
-        <span className="font-heading text-xl font-black text-primary tracking-widest">
-          GRIDLOCK
-        </span>
-        <span className="block font-mono text-[9px] text-muted-foreground tracking-widest mt-0.5">
-          ONLINE GAME ARENA
-        </span>
+
+      <div className="px-3 mb-6 flex items-center justify-between">
+        <div>
+          <span className="font-heading text-xl font-black text-primary tracking-widest">
+            GRIDLOCK
+          </span>
+          <span className="block font-mono text-[9px] text-muted-foreground tracking-widest mt-0.5">
+            ONLINE GAME ARENA
+          </span>
+        </div>
+        <NotificationBell />
       </div>
 
       {/* nav links */}

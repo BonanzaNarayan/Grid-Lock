@@ -1,6 +1,8 @@
 import { ChallengeNotifications } from "@/components/social/ChallengeNotifications";
 import "./globals.css";
 import { AuthProvider } from "@/components/AuthProvider";
+import { NotificationProvider } from "@/components/notifications/NotificationProvider";
+import { ToastStack } from "@/components/notifications/ToastStack";
 
 // ─── Core config ────────────────────────────────────────────────
 const siteUrl         = "https://grid-lock-sandy.vercel.app"; // replace with your domain
@@ -158,6 +160,8 @@ export default function RootLayout({ children }) {
       <body>
         <AuthProvider>
           {children}
+          <NotificationProvider />       {/* ← runs all listeners */}
+          <ToastStack /> 
           <ChallengeNotifications />
         </AuthProvider>
       </body>
