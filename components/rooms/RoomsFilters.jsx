@@ -4,6 +4,7 @@ import { Search } from "lucide-react";
 const GAME_FILTERS = [
   { id: "all",          label: "All Games"    },
   { id: "tic-tac-toe",  label: "Tic-Tac-Toe"  },
+  { id: "connect-four",  label: "Connect-Four"  },
 ];
 
 export function RoomsFilters({ gameType, onGameType, search, onSearch }) {
