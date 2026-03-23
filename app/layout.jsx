@@ -3,6 +3,7 @@ import "./globals.css";
 import { AuthProvider } from "@/components/AuthProvider";
 import { NotificationProvider } from "@/components/notifications/NotificationProvider";
 import { ToastStack } from "@/components/notifications/ToastStack";
+import { Analytics } from "@vercel/analytics/next";
 
 // ─── Core config ────────────────────────────────────────────────
 const siteUrl         = "https://grid-lock-sandy.vercel.app"; // replace with your domain
@@ -164,6 +165,7 @@ export default function RootLayout({ children }) {
           <ToastStack /> 
           <ChallengeNotifications />
         </AuthProvider>
+        <Analytics/>
       </body>
     </html>
   );
