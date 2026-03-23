@@ -14,6 +14,7 @@ import { ProfileStats }         from "@/components/profile/ProfileStats";
 import { ProfileRecentGames }   from "@/components/profile/ProfileRecentGames";
 import { ProfileFriends }       from "@/components/profile/ProfileFriends";
 import { ChallengeButton }      from "@/components/social/ChallengeButton";
+import { AchievementGrid } from "../achievements/AchievementGrid";
 
 export function PublicProfilePage({ username }) {
   const router             = useRouter();
@@ -118,6 +119,7 @@ export function PublicProfilePage({ username }) {
 
         {/* friends */}
         <ProfileFriends uid={profile.uid} />
+        <AchievementGrid uid={profile.uid} />
 
       </main>
       <AuthModal />

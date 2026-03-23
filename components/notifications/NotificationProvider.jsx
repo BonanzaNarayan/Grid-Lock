@@ -151,6 +151,20 @@ export function NotificationProvider() {
       // level up notifications are written by updateStats
       // and will appear in the notification history automatically
       // we just need to toast the most recent level_up
+
+      const recentAchievement = notifs.find(
+        (n) => n.type === "achievement" &&
+          !n.read &&
+          (Date.now() - (n.createdAt?.toMillis?.() ?? 0)) < 10000
+      );
+      if (recentAchievement) {
+        store.addToast({
+          type:     "achievement",
+          title:    recentAchievement.title,
+          message:  recentAchievement.message,
+          duration: 7000,
+        });
+      }
       const recentLevelUp = notifs.find(
         (n) => n.type === "level_up" && !n.read &&
           (Date.now() - (n.createdAt?.toMillis?.() ?? 0)) < 10000
