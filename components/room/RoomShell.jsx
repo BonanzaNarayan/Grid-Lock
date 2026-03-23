@@ -64,26 +64,33 @@ export function RoomShell({ roomId }) {
     updateStats({ db, winnerUid, loserUid, isDraw: isDraw_, gameType: room.gameType });
   }, [room?.status]);
 
-  // auto-apply rematch when both vote
-  useEffect(() => {
-    if (!room) return;
-    const { rematchVotes } = room;
-    if (rematchVotes?.X && rematchVotes?.O) {
-      applyRematch({ roomId, players: room.players });
-      statsUpdated.current = false;
-    }
-  }, [room?.rematchVotes]);
+  // update applyRematch call
+useEffect(() => {
+  if (!room) return;
+  const { rematchVotes } = room;
+  if (rematchVotes?.X && rematchVotes?.O) {
+    applyRematch({
+      roomId,
+      players:   room.players,
+      gameType:  room.gameType,
+      boardSize: room.boardSize ?? "standard",
+    });
+    statsUpdated.current = false;
+  }
+}, [room?.rematchVotes]);
 
-  async function handleMove(index) {
+  async function handleMove(moveData) {
     if (!room || !myMark) return;
     await makeMove({
       roomId,
-      index,
+      index:       moveData.index ?? moveData,
       board:       room.board,
       currentTurn: room.currentTurn,
       mode:        room.mode,
       scores:      room.scores,
       round:       room.round,
+      gameType:    room.gameType,
+      boardSize:   room.boardSize ?? "standard",
     });
   }
 
@@ -183,6 +190,7 @@ export function RoomShell({ roomId }) {
                 myMark={myMark}
                 status={room.status}
                 onMove={handleMove}
+                boardSize={room.boardSize ?? "standard"}
               />
 
               {/* result overlay */}

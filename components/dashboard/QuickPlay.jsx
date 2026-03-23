@@ -24,7 +24,7 @@ const GAMES = [
     id:          "connect-four",
     label:       "Connect Four",
     description: "Drop pieces, connect four to win.",
-    available:   false,
+    available:   true,
     icon:        "◉ ◉",
   },
   {
@@ -49,10 +49,15 @@ const TIMERS = [
   { id: 90,  label: "90s" },
 ];
 
+const BOARD_SIZES = [
+  { id: "standard", label: "Standard (6×7)" },
+  { id: "mini",     label: "Mini (5×6)"     },
+];
+
 export function QuickPlay() {
   const router  = useRouter();
   const { user, profile } = useAuthStore();
-
+  const [boardSize, setBoardSize] = useState("standard");
   const [selectedGame, setSelectedGame] = useState(null);
   const [mode,         setMode]         = useState("bo3");
   const [isPrivate, setIsPrivate] = useState(false);
@@ -72,6 +77,7 @@ export function QuickPlay() {
         mode,
         timerSecs,
         isPrivate,
+        boardSize:     selectedGame.id === "connect-four" ? boardSize : null, // ← add
         createdAt:     serverTimestamp(),
         createdBy:     user.uid,
         players: {
@@ -81,7 +87,9 @@ export function QuickPlay() {
         playerUids:    [user.uid],
         currentTurn:   "X",
         winner:        null,
-        board:         Array(9).fill(null),
+        board:         selectedGame.id === "connect-four"
+          ? Array(boardSize === "mini" ? 30 : 42).fill(null)  // 5×6=30, 6×7=42
+          : Array(9).fill(null),
         scores:        { X: 0, O: 0 },
         round:         1,
         rematchVotes:  { X: false, O: false },
@@ -246,6 +254,29 @@ export function QuickPlay() {
                 </motion.div>
               )}
             </AnimatePresence>
+
+            {/* board size — only for connect four */}
+            {selectedGame?.id === "connect-four" && (
+              <div className="flex flex-col gap-1.5">
+                <span className="font-mono text-[10px] text-muted-foreground tracking-widest">
+                  Board Size
+                </span>
+                <div className="flex bg-background border border-border rounded-sm overflow-hidden">
+                  {BOARD_SIZES.map((s) => (
+                    <button
+                      key={s.id}
+                      onClick={() => setBoardSize(s.id)}
+                      className={`font-mono text-xs tracking-widest px-4 py-2 transition-colors duration-150
+                        ${boardSize === s.id
+                          ? "bg-primary text-primary-foreground"
+                          : "text-muted-foreground hover:text-foreground"}`}
+                    >
+                      {s.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {/* private toggle */}
               <div className="flex flex-col w-fit gap-1.5">

@@ -5,6 +5,7 @@ import { GAME_TYPES }   from "@/lib/statsService";
 
 const GAME_LABELS = {
   "tic-tac-toe": { label: "Tic-Tac-Toe", icon: "✕ ○" },
+  "connect-four": { label: "Connect Four", icon: "◉ ◉" },
 };
 
 export function GameTypeStats() {
