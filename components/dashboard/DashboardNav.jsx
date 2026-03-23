@@ -29,7 +29,8 @@ export function DashboardNav({ mobile = false }) {
   /* ── mobile bottom bar ── */
   if (mobile) {
     return (
-      <nav className="flex items-center justify-around bg-card border-t border-border px-2 py-3">
+      // mobile bottom bar — confirm z-index is z-50
+      <nav className="flex items-center justify-around bg-card border-t border-border px-2 py-3 z-50">
         {links.map(({ label, href, icon: Icon }) => {
           const active = pathname === href;
           return (

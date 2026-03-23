@@ -9,7 +9,9 @@ import { ChatInput }                  from "@/components/friends/ChatInput";
 import { PresenceDot }                from "@/components/friends/PresenceDot";
 import { getAvatar }                  from "@/lib/avatars";
 import { db }                         from "@/lib/firebase";
-import { collection, query, where, onSnapshot } from "firebase/firestore";
+import {
+  collection, query, where, onSnapshot,
+} from "firebase/firestore";
 
 export function ChatDrawer({ friend, onClose }) {
   const { user }          = useAuthStore();
@@ -17,10 +19,9 @@ export function ChatDrawer({ friend, onClose }) {
   const chatId            = friend ? getChatId(user.uid, friend.uid) : null;
   const avatar            = getAvatar(friend?.avatarId);
 
-  // ── mark as read the moment the drawer opens ──
+  // mark as read immediately on open
   useEffect(() => {
     if (!chatId || !user?.uid) return;
-    // fire immediately on open — don't wait for messages to load
     markRead(chatId, user.uid);
   }, [chatId, user?.uid]);
 
@@ -42,22 +43,29 @@ export function ChatDrawer({ friend, onClose }) {
     <AnimatePresence>
       {friend && (
         <>
-          {/* backdrop */}
+          {/* backdrop — above bottom nav */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{   opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 z-40 bg-background/60 backdrop-blur-sm md:hidden"
+            className="fixed inset-0 z-[60] bg-background/60 backdrop-blur-sm md:hidden"
           />
 
-          {/* drawer */}
+          {/* drawer — above backdrop + above bottom nav */}
           <motion.div
             initial={{ x: "100%" }}
             animate={{ x: 0       }}
             exit={{   x: "100%"   }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
-            className="fixed right-0 top-0 bottom-0 z-50 w-full max-w-sm bg-background border-l border-border flex flex-col shadow-2xl"
+            className={`
+              fixed right-0 top-0 z-[70]
+              w-full max-w-sm
+              bg-background border-l border-border
+              flex flex-col shadow-2xl
+              /* sits above bottom nav on mobile, full height on desktop */
+              bottom-16 md:bottom-0
+            `}
           >
             {/* header */}
             <div className="flex items-center justify-between px-4 py-3 border-b border-border shrink-0">
@@ -87,10 +95,10 @@ export function ChatDrawer({ friend, onClose }) {
               </button>
             </div>
 
-            {/* messages */}
+            {/* messages — scrollable middle */}
             <ChatMessages chatId={chatId} toUser={friend} />
 
-            {/* input */}
+            {/* input — pinned to bottom of drawer */}
             <ChatInput toUid={friend.uid} chatId={chatId} myRooms={myRooms} />
           </motion.div>
         </>
