@@ -2,7 +2,7 @@ import "./globals.css";
 import { AuthProvider } from "@/components/AuthProvider";
 
 // ─── Core config ────────────────────────────────────────────────
-const siteUrl         = "https://gridlock.gg"; // replace with your domain
+const siteUrl         = "https://grid-lock-sandy.vercel.app"; // replace with your domain
 const siteName        = "GRIDLOCK";
 const siteDescription =
   "Real-time multiplayer gaming arena. Challenge friends, climb the leaderboard and dominate the grid. Play Tic-Tac-Toe and more — no downloads needed.";
