@@ -12,7 +12,7 @@ const TYPE_STYLES = {
   room_joined:    { icon: "⚡", accent: "border-accent-game/50  bg-accent-game/5 backdrop-blur-2xl"  },
   challenge:      { icon: "⚔️", accent: "border-primary/50      bg-primary/5 backdrop-blur-2xl"      },
   level_up:       { icon: "🏆", accent: "border-yellow-400/50   bg-yellow-400/5 backdrop-blur-2xl"   },
-  achievement: { icon: "🏅", accent: "border-yellow-400/50 bg-yellow-400/5" },
+  achievement: { icon: "🏅", accent: "border-yellow-400/50 bg-yellow-400/5  backdrop-blur-2xl" }
 };
 
 export function ToastNotification({ toast }) {
