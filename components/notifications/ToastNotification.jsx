@@ -5,13 +5,13 @@ import { useNotificationStore } from "@/store/useNotificationStore";
 import { X }                    from "lucide-react";
 
 const TYPE_STYLES = {
-  friend_request: { icon: "👥", accent: "border-accent-game/50  bg-accent-game/30"  },
-  friend_accepted:{ icon: "✅", accent: "border-primary/50      bg-primary/30"      },
-  new_message:    { icon: "💬", accent: "border-primary/50      bg-primary/30"      },
-  room_invite:    { icon: "🎮", accent: "border-primary/50      bg-primary/30"      },
-  room_joined:    { icon: "⚡", accent: "border-accent-game/50  bg-accent-game/5"  },
-  challenge:      { icon: "⚔️", accent: "border-primary/50      bg-primary/30"      },
-  level_up:       { icon: "🏆", accent: "border-yellow-400/50   bg-yellow-400/30"   },
+  friend_request: { icon: "👥", accent: "border-accent-game/50  bg-accent-game/5 backdrop-blur-2xl"  },
+  friend_accepted:{ icon: "✅", accent: "border-primary/50      bg-primary/5 backdrop-blur-2xl"      },
+  new_message:    { icon: "💬", accent: "border-primary/50      bg-primary/5 backdrop-blur-2xl"      },
+  room_invite:    { icon: "🎮", accent: "border-primary/50      bg-primary/5 backdrop-blur-2xl"      },
+  room_joined:    { icon: "⚡", accent: "border-accent-game/50  bg-accent-game/5 backdrop-blur-2xl"  },
+  challenge:      { icon: "⚔️", accent: "border-primary/50      bg-primary/5 backdrop-blur-2xl"      },
+  level_up:       { icon: "🏆", accent: "border-yellow-400/50   bg-yellow-400/5 backdrop-blur-2xl"   },
 };
 
 export function ToastNotification({ toast }) {
