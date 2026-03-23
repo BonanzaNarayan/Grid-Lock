@@ -130,7 +130,7 @@ export default function DashboardPage() {
           className="grid grid-cols-1 xl:grid-cols-2 gap-6"
         >
           <QuickPlay />
-          <MyRooms />
+          <ActiveRooms />
         </motion.div>
 
         {/* ── ROW 3 — DIVIDER LABEL ──────────────────────────── */}
@@ -148,7 +148,7 @@ export default function DashboardPage() {
         >
           {/* open rooms — takes most space */}
           <div className="lg:col-span-2 xl:col-span-3">
-            <ActiveRooms />
+          <MyRooms />
           </div>
 
           {/* sidebar — friends + recent games stacked */}
