@@ -8,6 +8,7 @@ import { PresenceDot }           from "@/components/friends/PresenceDot";
 import { GlowButton }            from "@/components/ui/GlowButton";
 import { getAvatar }             from "@/lib/avatars";
 import { Search }                from "lucide-react";
+import { useRouter } from "next/navigation";
 
 function getRequestStatus(uid, sent, received) {
   const sentReq     = sent.find((r)     => r.toUid   === uid);
@@ -56,6 +57,7 @@ export function FindFriends() {
   const { users, requests } = useFriendsStore(); // ← from store, no listener
   const [search,  setSearch]  = useState("");
   const [loading, setLoading] = useState({});
+  const router = useRouter()
 
   const filtered = users
     .filter((u) => u.uid !== user.uid)
@@ -101,7 +103,10 @@ export function FindFriends() {
                 transition={{ duration: 0.25, delay: i * 0.03 }}
                 className="flex items-center justify-between py-3 gap-3"
               >
-                <div className="flex items-center gap-3 min-w-0">
+                <button
+                  onClick={() => router.push(`/player/${u.username}`)}
+                  className="flex items-center gap-3 min-w-0 hover:opacity-80 transition-opacity"
+                >
                   <div className="relative">
                     <div className="w-10 h-10 rounded-sm bg-card border border-border flex items-center justify-center text-xl shrink-0">
                       {avatar.icon}
@@ -116,7 +121,7 @@ export function FindFriends() {
                       <span className="font-mono text-[10px] text-muted-foreground">{u.gamerTag}</span>
                     )}
                   </div>
-                </div>
+                </button>
                 <AddButton req={req} onAdd={() => handleAdd(u.uid)} loading={!!loading[u.uid]} />
               </motion.div>
             );

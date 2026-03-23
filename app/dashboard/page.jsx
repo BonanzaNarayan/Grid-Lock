@@ -10,6 +10,7 @@ import { RecentGames }       from "@/components/dashboard/RecentGames";
 import { FriendsList }       from "@/components/dashboard/FriendsList";
 import { MyRooms }           from "@/components/dashboard/MyRooms";
 import { getAvatar }         from "@/lib/avatars";
+import { ActivityFeed } from "@/components/dashboard/ActivityFeed";
 
 const stagger = {
   hidden: {},
@@ -153,6 +154,7 @@ export default function DashboardPage() {
           {/* sidebar — friends + recent games stacked */}
           <div className="flex flex-col gap-6">
             <FriendsList />
+            <ActivityFeed />
             <RecentGames />
           </div>
         </motion.div>

@@ -139,11 +139,14 @@ export function DashboardNav({ mobile = false }) {
       {/* profile + logout */}
       <div className="border-t border-border pt-4 flex flex-col gap-2">
         {profile && (
-          <div className="flex items-center gap-3 px-3 py-2">
+          <button
+            onClick={() => router.push(`/player/${profile.username}`)}
+            className="flex items-center gap-3 px-3 py-2 hover:bg-background rounded-sm transition-colors duration-150 w-full"
+          >
             <div className="w-8 h-8 rounded-sm bg-primary/10 border border-primary/30 flex items-center justify-center text-lg">
               {avatar.icon}
             </div>
-            <div className="flex flex-col min-w-0">
+            <div className="flex flex-col min-w-0 text-left">
               <span className="font-mono text-xs text-foreground truncate">
                 {profile.displayUsername}
               </span>
@@ -151,7 +154,7 @@ export function DashboardNav({ mobile = false }) {
                 {profile.email}
               </span>
             </div>
-          </div>
+          </button>
         )}
         <motion.button
           onClick={handleLogout}

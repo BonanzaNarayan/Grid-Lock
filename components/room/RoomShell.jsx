@@ -61,7 +61,15 @@ export function RoomShell({ roomId }) {
     const loserMark  = matchWinner === "X" ? "O" : "X";
     const loserUid   = isDraw_ ? null : players?.[loserMark]?.uid;
 
-    updateStats({ db, winnerUid, loserUid, isDraw: isDraw_, gameType: room.gameType });
+    updateStats({
+      db,
+      winnerUid,
+      loserUid,
+      isDraw:      isDraw_,
+      gameType:    room.gameType,
+      winnerName:  players?.[matchWinner]?.displayName,
+      loserName:   players?.[loserMark]?.displayName,
+    });
   }, [room?.status]);
 
   // update applyRematch call
