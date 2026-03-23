@@ -1,11 +1,13 @@
 "use client";
-import { motion } from "motion/react";
-import { GlowButton } from "@/components/ui/GlowButton";
-import { useAuthModal } from "@/store/useAuthModal";
+import { motion }        from "motion/react";
+import { useRouter }     from "next/navigation";
+import { GlowButton }    from "@/components/ui/GlowButton";
+import { useAuthModal }  from "@/store/useAuthModal";
+import { useAuthStore }  from "@/store/useAuthStore";
 
 const container = {
   hidden: {},
-  show: { transition: { staggerChildren: 0.12 } },
+  show:   { transition: { staggerChildren: 0.12 } },
 };
 
 const item = {
@@ -14,7 +16,9 @@ const item = {
 };
 
 export function Hero() {
-  const { open } = useAuthModal();
+  const { open }  = useAuthModal();
+  const { user }  = useAuthStore();
+  const router    = useRouter();
 
   return (
     <section className="relative min-h-screen flex flex-col items-center justify-center text-center px-6 pt-24 pb-16">
@@ -64,12 +68,41 @@ export function Hero() {
 
         {/* CTAs */}
         <motion.div variants={item} className="flex flex-col sm:flex-row gap-4 mt-2">
-          <GlowButton onClick={() => open("signup")} className="px-10 py-4 text-sm">
-            Start Playing — It&apos;s Free
-          </GlowButton>
-          <GlowButton variant="ghost" onClick={() => open("login")} className="px-10 py-4 text-sm">
-            I Have an Account
-          </GlowButton>
+          {user ? (
+            // authenticated — go to dashboard or browse rooms
+            <>
+              <GlowButton
+                onClick={() => router.push("/dashboard")}
+                className="px-10 py-4 text-sm"
+              >
+                Go to Dashboard →
+              </GlowButton>
+              <GlowButton
+                variant="ghost"
+                onClick={() => router.push("/rooms")}
+                className="px-10 py-4 text-sm"
+              >
+                Browse Live Rooms
+              </GlowButton>
+            </>
+          ) : (
+            // unauthenticated — signup + login
+            <>
+              <GlowButton
+                onClick={() => open("signup")}
+                className="px-10 py-4 text-sm"
+              >
+                Start Playing — It&apos;s Free
+              </GlowButton>
+              <GlowButton
+                variant="ghost"
+                onClick={() => open("login")}
+                className="px-10 py-4 text-sm"
+              >
+                I Have an Account
+              </GlowButton>
+            </>
+          )}
         </motion.div>
 
         {/* social proof */}

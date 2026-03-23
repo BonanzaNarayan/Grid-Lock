@@ -7,10 +7,12 @@ import {
   Gamepad2, Users, BarChart2, Settings, LogOut,
 } from "lucide-react";
 import { getAvatar } from "@/lib/avatars";
+import { Globe } from "lucide-react";
 
 const links = [
   { label: "Play",     href: "/dashboard",          icon: Gamepad2  },
   { label: "Friends",  href: "/dashboard/friends",   icon: Users     },
+  { label: "Rooms",  href: "/dashboard/rooms",   icon: Globe     },
   { label: "Stats",    href: "/dashboard/stats",     icon: BarChart2 },
   { label: "Settings", href: "/dashboard/settings",  icon: Settings  },
 ];
