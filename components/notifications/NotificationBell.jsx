@@ -24,7 +24,7 @@ export function NotificationBell() {
     <div ref={ref} className="relative">
       <button
         onClick={() => setOpen((p) => !p)}
-        className="relative flex items-center justify-center w-9 h-9 rounded-sm border border-border hover:border-primary bg-card hover:bg-background transition-colors duration-150"
+        className="relative flex items-center justify-center w-9 h-9 border rounded-xl bg-card hover:bg-background transition-colors duration-150"
       >
         <Bell size={16} className="text-muted-foreground" />
         <AnimatePresence>
@@ -34,7 +34,7 @@ export function NotificationBell() {
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               exit={{   scale: 0 }}
-              className="absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] rounded-full bg-primary text-primary-foreground font-mono text-[9px] flex items-center justify-center px-1"
+              className="absolute -top-1.5 -right-1.5 min-w-4.5 h-4.5 rounded-full bg-primary text-primary-foreground font-mono text-[9px] flex items-center justify-center px-1"
             >
               {unread > 9 ? "9+" : unread}
             </motion.span>

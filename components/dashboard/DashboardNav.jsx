@@ -72,11 +72,6 @@ export function DashboardNav({ mobile = false }) {
             </button>
           );
         })}
-        <div
-          className="flex flex-col items-center gap-1 flex-1 py-3 relative"
-        >
-          <NotificationBell />
-        </div>
         <button
           onClick={handleLogout}
           className="flex flex-col items-center gap-1 flex-1"
@@ -86,6 +81,7 @@ export function DashboardNav({ mobile = false }) {
             Logout
           </span>
         </button>
+        <NotificationBell />
       </nav>
     );
   }

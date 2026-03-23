@@ -83,7 +83,7 @@ export default function DashboardPage() {
           variants={fadeUp}
           className="flex items-center justify-between flex-wrap gap-4"
         >
-          <div className="flex items-center gap-4">
+          <button onClick={()=> router.push(`/player/${profile.displayUsername}`)} className="flex items-center gap-4 cursor-pointer">
             {/* avatar */}
             <div className="w-14 h-14 rounded-sm bg-card border border-border flex items-center justify-center text-3xl shrink-0">
               {avatar.icon}
@@ -104,7 +104,7 @@ export default function DashboardPage() {
                 </p>
               )}
             </div>
-          </div>
+          </button>
 
           {/* live status pill */}
           <div className="flex items-center gap-2 bg-card border border-border rounded-sm px-4 py-2">
