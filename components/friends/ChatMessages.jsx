@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 import { watchMessages }               from "@/lib/chatService";
 import { useAuthStore }                from "@/store/useAuthStore";
+import { motion } from "motion/react";
 
 export function ChatMessages({ chatId, toUser }) {
   const { user }        = useAuthStore();
@@ -32,30 +33,90 @@ export function ChatMessages({ chatId, toUser }) {
       {msgs.map((msg) => {
         const isMe = msg.senderUid === user?.uid;
 
+        // replace the room_invite block inside ChatMessages
         if (msg.type === "room_invite") return (
           <div
             key={msg.id}
             className={`flex ${isMe ? "justify-end" : "justify-start"}`}
           >
-            <div className="bg-primary/10 border border-primary/30 rounded-sm px-4 py-3 flex flex-col gap-2 max-w-xs">
-              <span className="font-mono text-[10px] text-primary tracking-widest">
-                🎮 GAME INVITE
-              </span>
-              <span className="font-mono text-xs text-foreground">
-                {msg.roomMeta?.gameType} · {msg.roomMeta?.mode}
-              </span>
-              {!isMe && (
-                <button
-                  onClick={() => window.open(`/room/${msg.roomId}`, "_blank")}
-                  className="font-mono text-[10px] text-primary border border-primary/30 px-3 py-1.5 rounded-sm hover:bg-primary/10 transition-colors duration-150 text-left"
-                >
-                  Join Room →
-                </button>
-              )}
-            </div>
+            <motion.div
+              initial={{ opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="bg-primary/10 border border-primary/30 rounded-sm overflow-hidden max-w-xs w-full"
+            >
+              {/* invite header */}
+              <div className="flex items-center gap-2 px-3 py-2 border-b border-primary/20 bg-primary/5">
+                <span className="text-sm">🎮</span>
+                <span className="font-mono text-[10px] text-primary tracking-widest uppercase font-black">
+                  Game Invite
+                </span>
+              </div>
+
+              {/* room details */}
+              <div className="px-3 py-3 flex flex-col gap-2">
+                <div className="flex flex-col gap-1">
+                  {/* room ID */}
+                  <div className="flex items-center justify-between">
+                    <span className="font-mono text-[9px] text-muted-foreground tracking-widest uppercase">
+                      Room ID
+                    </span>
+                    <span className="font-mono text-xs text-primary font-black">
+                      #{msg.roomId?.slice(0, 8).toUpperCase()}
+                    </span>
+                  </div>
+                  {/* game type */}
+                  <div className="flex items-center justify-between">
+                    <span className="font-mono text-[9px] text-muted-foreground tracking-widest uppercase">
+                      Game
+                    </span>
+                    <span className="font-mono text-[10px] text-foreground">
+                      {msg.roomMeta?.gameType}
+                    </span>
+                  </div>
+                  {/* mode */}
+                  <div className="flex items-center justify-between">
+                    <span className="font-mono text-[9px] text-muted-foreground tracking-widest uppercase">
+                      Mode
+                    </span>
+                    <span className="font-mono text-[10px] text-foreground">
+                      {msg.roomMeta?.mode === "bo1" ? "1 Round"
+                        : msg.roomMeta?.mode === "bo3" ? "Best of 3"
+                        : "Best of 5"}
+                    </span>
+                  </div>
+                  {/* timer */}
+                  {msg.roomMeta?.timerSecs && (
+                    <div className="flex items-center justify-between">
+                      <span className="font-mono text-[9px] text-muted-foreground tracking-widest uppercase">
+                        Timer
+                      </span>
+                      <span className="font-mono text-[10px] text-foreground">
+                        {msg.roomMeta.timerSecs}s per turn
+                      </span>
+                    </div>
+                  )}
+                </div>
+
+                {/* join button — only show to the receiver */}
+                {!isMe && msg.roomId && (
+                  <button
+                    onClick={() => window.open(`/room/${msg.roomId}`, "_blank")}
+                    className="w-full font-mono text-xs text-primary-foreground bg-primary hover:bg-primary-dim rounded-sm py-2 transition-colors duration-150 font-black tracking-widest uppercase"
+                  >
+                    Join Room →
+                  </button>
+                )}
+
+                {/* sender sees a sent indicator instead */}
+                {isMe && (
+                  <span className="font-mono text-[9px] text-muted-foreground text-center tracking-widest">
+                    Invite sent
+                  </span>
+                )}
+              </div>
+            </motion.div>
           </div>
         );
-
         return (
           <div
             key={msg.id}
