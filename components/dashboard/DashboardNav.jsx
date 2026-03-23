@@ -30,7 +30,14 @@ export function DashboardNav({ mobile = false }) {
   if (mobile) {
     return (
       // mobile bottom bar — confirm z-index is z-50
-      <nav className="flex items-center justify-around bg-card border-t border-border px-2 py-3 z-50">
+      <nav
+        className="flex items-center justify-around bg-card border-t border-border px-2"
+        style={{
+          paddingBottom: "env(safe-area-inset-bottom)",
+          // ensure the bar itself has enough height above the home indicator
+          minHeight: "calc(3.5rem + env(safe-area-inset-bottom))",
+        }}
+      >
         {links.map(({ label, href, icon: Icon }) => {
           const active = pathname === href;
           return (
@@ -77,7 +84,13 @@ export function DashboardNav({ mobile = false }) {
 
   /* ── desktop sidebar ── */
   return (
-    <nav className="w-60 h-screen sticky top-0 flex flex-col border-r border-border bg-card px-4 py-6 gap-2">
+    <nav
+      className="w-60 h-screen sticky top-0 flex flex-col border-r border-border bg-card px-4 py-6 gap-2"
+      style={{
+        paddingTop:  "max(1.5rem, env(safe-area-inset-top))",
+        paddingLeft: "max(1rem, env(safe-area-inset-left))",
+      }}
+    >
 
       {/* logo */}
       <div className="px-3 mb-6">

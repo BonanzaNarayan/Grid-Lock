@@ -44,6 +44,10 @@ export function GameChat({ roomId, players }) {
             exit={{   opacity: 0, x: 20  }}
             onClick={handleOpen}
             className="fixed right-0 top-1/2 -translate-y-1/2 z-30 flex flex-col items-center gap-1 bg-card border border-border border-r-0 rounded-l-sm px-2 py-4 hover:bg-background transition-colors duration-150 group"
+            style={{
+              // keep button away from right edge notch on landscape
+              marginRight: "env(safe-area-inset-right)",
+            }}
           >
             <MessageSquare
               size={16}
