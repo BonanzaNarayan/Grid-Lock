@@ -1,16 +1,15 @@
 "use client";
-import { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "motion/react";
-import { useAuthStore }      from "@/store/useAuthStore";
-import { watchAllUsers, sendFriendRequest } from "@/lib/friendsService";
-import { watchFriendRequests } from "@/lib/friendsService";
-import { PresenceDot }       from "@/components/friends/PresenceDot";
-import { GameInput }         from "@/components/ui/GameInput";
-import { GlowButton }        from "@/components/ui/GlowButton";
-import { getAvatar }         from "@/lib/avatars";
-import { Search }            from "lucide-react";
+import { motion }                from "motion/react";
+import { useState }              from "react";
+import { useAuthStore }          from "@/store/useAuthStore";
+import { useFriendsStore }       from "@/store/useFriendsStore";
+import { sendFriendRequest }     from "@/lib/friendsService";
+import { PresenceDot }           from "@/components/friends/PresenceDot";
+import { GlowButton }            from "@/components/ui/GlowButton";
+import { getAvatar }             from "@/lib/avatars";
+import { Search }                from "lucide-react";
 
-function getRequestStatus(uid, myUid, sent, received) {
+function getRequestStatus(uid, sent, received) {
   const sentReq     = sent.find((r)     => r.toUid   === uid);
   const receivedReq = received.find((r) => r.fromUid === uid);
   if (sentReq)     return { status: sentReq.status,     direction: "sent",     id: sentReq.id     };
@@ -20,40 +19,43 @@ function getRequestStatus(uid, myUid, sent, received) {
 
 function AddButton({ req, onAdd, loading }) {
   if (!req)
-    return <GlowButton variant="ghost" className="text-[10px] py-1 px-3" onClick={onAdd} disabled={loading}>
-      {loading ? "..." : "Add"}
-    </GlowButton>;
+    return (
+      <GlowButton variant="ghost" className="text-[10px] py-1 px-3" onClick={onAdd} disabled={loading}>
+        {loading ? "..." : "Add"}
+      </GlowButton>
+    );
 
   if (req.direction === "received" && req.status === "pending")
-    return <span className="font-mono text-[10px] text-accent-game border border-accent-game/30 bg-accent-game/10 px-2 py-1 rounded-sm">Respond ↓</span>;
-
-  const map = {
-    pending:  { label: "Request Sent", color: "text-muted-foreground border-border-game" },
-    accepted: { label: "Friends ✦",    color: "text-primary border-primary/30 bg-primary/10" },
-    rejected: { label: "Add",          color: "text-muted-foreground border-border-game" },
-  };
-  const style = map[req.status] ?? map.pending;
+    return (
+      <span className="font-mono text-[10px] text-accent-game border border-accent-game/30 bg-accent-game/10 px-2 py-1 rounded-sm">
+        Respond ↓
+      </span>
+    );
 
   if (req.status === "rejected")
-    return <GlowButton variant="ghost" className="text-[10px] py-1 px-3" onClick={onAdd} disabled={loading}>
-      {loading ? "..." : "Add"}
-    </GlowButton>;
+    return (
+      <GlowButton variant="ghost" className="text-[10px] py-1 px-3" onClick={onAdd} disabled={loading}>
+        {loading ? "..." : "Add"}
+      </GlowButton>
+    );
 
-  return <span className={`font-mono text-[10px] border px-2 py-1 rounded-sm ${style.color}`}>{style.label}</span>;
+  const styles = {
+    pending:  "text-muted-foreground border-border-game",
+    accepted: "text-primary border-primary/30 bg-primary/10",
+  };
+
+  return (
+    <span className={`font-mono text-[10px] border px-2 py-1 rounded-sm ${styles[req.status] ?? styles.pending}`}>
+      {req.status === "accepted" ? "Friends ✦" : "Request Sent"}
+    </span>
+  );
 }
 
 export function FindFriends() {
-  const { user } = useAuthStore();
-  const [users,    setUsers]    = useState([]);
-  const [requests, setRequests] = useState({ sent: [], received: [] });
-  const [search,   setSearch]   = useState("");
-  const [loading,  setLoading]  = useState({});
-
-  useEffect(() => {
-    const u1 = watchAllUsers(setUsers);
-    const u2 = watchFriendRequests(user.uid, setRequests);
-    return () => { u1(); u2(); };
-  }, [user.uid]);
+  const { user }     = useAuthStore();
+  const { users, requests } = useFriendsStore(); // ← from store, no listener
+  const [search,  setSearch]  = useState("");
+  const [loading, setLoading] = useState({});
 
   const filtered = users
     .filter((u) => u.uid !== user.uid)
@@ -65,15 +67,13 @@ export function FindFriends() {
 
   async function handleAdd(toUid) {
     setLoading((p) => ({ ...p, [toUid]: true }));
-    try {
-      await sendFriendRequest(user.uid, toUid);
-    } catch {}
+    try { await sendFriendRequest(user.uid, toUid); }
+    catch {}
     finally { setLoading((p) => ({ ...p, [toUid]: false })); }
   }
 
   return (
     <div className="flex flex-col gap-4">
-      {/* search */}
       <div className="relative">
         <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
         <input
@@ -84,7 +84,6 @@ export function FindFriends() {
         />
       </div>
 
-      {/* list */}
       <div className="flex flex-col divide-y divide-border">
         {filtered.length === 0 ? (
           <p className="font-mono text-xs text-muted-foreground text-center py-8 tracking-widest">
@@ -93,16 +92,15 @@ export function FindFriends() {
         ) : (
           filtered.map((u, i) => {
             const avatar = getAvatar(u.avatarId);
-            const req    = getRequestStatus(u.uid, user.uid, requests.sent, requests.received);
+            const req    = getRequestStatus(u.uid, requests.sent, requests.received);
             return (
               <motion.div
                 key={u.uid}
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.25, delay: i * 0.04 }}
+                transition={{ duration: 0.25, delay: i * 0.03 }}
                 className="flex items-center justify-between py-3 gap-3"
               >
-                {/* avatar + info */}
                 <div className="flex items-center gap-3 min-w-0">
                   <div className="relative">
                     <div className="w-10 h-10 rounded-sm bg-card border border-border flex items-center justify-center text-xl shrink-0">
@@ -119,7 +117,6 @@ export function FindFriends() {
                     )}
                   </div>
                 </div>
-                {/* action */}
                 <AddButton req={req} onAdd={() => handleAdd(u.uid)} loading={!!loading[u.uid]} />
               </motion.div>
             );

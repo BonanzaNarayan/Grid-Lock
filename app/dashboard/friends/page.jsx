@@ -1,29 +1,46 @@
 "use client";
-import { useState, useEffect } from "react";
-import { useRouter }           from "next/navigation";
-import { useAuthStore }        from "@/store/useAuthStore";
-import { FriendsTabs }         from "@/components/friends/FriendsTabs";
-import { FindFriends }         from "@/components/friends/FindFriends";
-import { FriendsList }         from "@/components/friends/FriendsList";
-import { FriendRequests }      from "@/components/friends/FriendRequests";
+import { useState, useEffect }     from "react";
+import { useRouter }               from "next/navigation";
 import { motion, AnimatePresence } from "motion/react";
-import { useState as useStateR, useEffect as useEffectR } from "react";
+import { useAuthStore }            from "@/store/useAuthStore";
+import { useFriendsStore }         from "@/store/useFriendsStore";
+import { FriendsTabs }             from "@/components/friends/FriendsTabs";
+import { FindFriends }             from "@/components/friends/FindFriends";
+import { FriendsList }             from "@/components/friends/FriendsList";
+import { FriendRequests }          from "@/components/friends/FriendRequests";
 
 export default function FriendsPage() {
-  const { user, loading } = useAuthStore();
-  const router = useRouter();
-  const [tab,          setTab]          = useStateR("find");
-  const [requestCount, setRequestCount] = useStateR(0);
+  const { user, loading }   = useAuthStore();
+  const { init, teardown }  = useFriendsStore();
+  const router              = useRouter();
+  const [tab,          setTab]          = useState("find");
+  const [requestCount, setRequestCount] = useState(0);
 
-  useEffectR(() => {
+  useEffect(() => {
     if (!loading && !user) router.replace("/");
   }, [user, loading]);
 
+  // init once — single set of listeners for the whole page
+  useEffect(() => {
+    if (!user) return;
+    init(user.uid);
+    return () => teardown(); // clean up all listeners on unmount
+  }, [user?.uid]);
+
+  // sync request count from store
+  const requests = useFriendsStore((s) => s.requests);
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setRequestCount(requests.received.filter((r) => r.status === "pending").length);
+  }, [requests]);
+
   if (loading) return (
     <div className="flex items-center justify-center min-h-screen bg-background">
-      <p className="font-mono text-xs text-muted-foreground tracking-widest animate-pulse">
-        LOADING...
-      </p>
+      <motion.div
+        animate={{ opacity: [1, 0.3, 1] }}
+        transition={{ duration: 1.2, repeat: Infinity }}
+        className="w-2 h-2 rounded-full bg-primary"
+      />
     </div>
   );
 
@@ -39,7 +56,6 @@ export default function FriendsPage() {
       />
 
       <div className="relative z-10 max-w-3xl mx-auto px-4 md:px-8 py-8 flex flex-col gap-6">
-
         <div>
           <h1 className="font-heading text-2xl md:text-3xl font-black text-foreground tracking-tight">
             FRIENDS
@@ -51,13 +67,11 @@ export default function FriendsPage() {
 
         <div className="relative bg-card border border-border rounded-sm overflow-hidden">
           <span className="absolute top-0 left-6 right-6 h-px bg-primary opacity-20" />
-
           <FriendsTabs
             active={tab}
             onChange={setTab}
             requestCount={requestCount}
           />
-
           <div className="p-6">
             <AnimatePresence mode="wait">
               <motion.div
@@ -69,12 +83,11 @@ export default function FriendsPage() {
               >
                 {tab === "find"     && <FindFriends />}
                 {tab === "friends"  && <FriendsList />}
-                {tab === "requests" && <FriendRequests onCountChange={setRequestCount} />}
+                {tab === "requests" && <FriendRequests />}
               </motion.div>
             </AnimatePresence>
           </div>
         </div>
-
       </div>
     </div>
   );

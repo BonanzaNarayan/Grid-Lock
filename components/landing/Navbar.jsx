@@ -2,9 +2,11 @@
 import { motion } from "motion/react";
 import { GlowButton } from "@/components/ui/GlowButton";
 import { useAuthModal } from "@/store/useAuthModal";
+import { useRouter } from "next/navigation";
 
 export function Navbar() {
   const { open } = useAuthModal();
+  const router = useRouter()
 
   return (
     <motion.nav

@@ -1,27 +1,17 @@
 "use client";
-import { useEffect, useState } from "react";
-import { motion } from "motion/react";
-import { useAuthStore }    from "@/store/useAuthStore";
-import { watchFriendRequests, acceptFriendRequest, rejectFriendRequest } from "@/lib/friendsService";
-import { watchAllUsers }   from "@/lib/friendsService";
-import { GlowButton }      from "@/components/ui/GlowButton";
-import { PresenceDot }     from "@/components/friends/PresenceDot";
-import { getAvatar }       from "@/lib/avatars";
+import { useState }              from "react";
+import { motion }                from "motion/react";
+import { useAuthStore }          from "@/store/useAuthStore";
+import { useFriendsStore }       from "@/store/useFriendsStore";
+import { acceptFriendRequest, rejectFriendRequest } from "@/lib/friendsService";
+import { GlowButton }            from "@/components/ui/GlowButton";
+import { PresenceDot }           from "@/components/friends/PresenceDot";
+import { getAvatar }             from "@/lib/avatars";
 
-export function FriendRequests({ onCountChange }) {
-  const { user }   = useAuthStore();
-  const [requests, setRequests] = useState({ sent: [], received: [] });
-  const [users,    setUsers]    = useState([]);
-  const [loading,  setLoading]  = useState({});
-
-  useEffect(() => {
-    const u1 = watchFriendRequests(user.uid, (r) => {
-      setRequests(r);
-      onCountChange?.(r.received.filter((x) => x.status === "pending").length);
-    });
-    const u2 = watchAllUsers(setUsers);
-    return () => { u1(); u2(); };
-  }, [user.uid]);
+export function FriendRequests() {
+  const { user }               = useAuthStore();
+  const { requests, users }    = useFriendsStore(); // ← from store
+  const [loading, setLoading]  = useState({});
 
   function getUser(uid) {
     return users.find((u) => u.uid === uid);
@@ -40,7 +30,7 @@ export function FriendRequests({ onCountChange }) {
   }
 
   const pending  = requests.received.filter((r) => r.status === "pending");
-  const sentReqs = requests.sent.filter((r) => r.status === "pending");
+  const sentReqs = requests.sent.filter((r)     => r.status === "pending");
 
   return (
     <div className="flex flex-col gap-6">
@@ -79,7 +69,9 @@ export function FriendRequests({ onCountChange }) {
                         {u?.displayUsername ?? "Unknown"}
                       </span>
                       {u?.gamerTag && (
-                        <span className="font-mono text-[10px] text-muted-foreground">{u.gamerTag}</span>
+                        <span className="font-mono text-[10px] text-muted-foreground">
+                          {u.gamerTag}
+                        </span>
                       )}
                     </div>
                   </div>
