@@ -100,7 +100,6 @@ export function PublicProfilePage({ username }) {
           isOwnProfile={isOwnProfile}
           friendStatus={friendStatus}
           onAddFriend={handleAddFriend}
-          onChallenge={() => {}}
           // override the challenge button with the full component
         />
 

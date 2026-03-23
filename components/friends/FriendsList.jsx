@@ -10,12 +10,14 @@ import { ChatDrawer }            from "@/components/friends/ChatDrawer";
 import { GlowButton }            from "@/components/ui/GlowButton";
 import { getAvatar }             from "@/lib/avatars";
 import { MessageSquare, UserMinus } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export function FriendsList() {
   const { user }                     = useAuthStore();
   const { users, requests, chats }   = useFriendsStore(); // ← from store
   const [chatWith,  setChatWith]     = useState(null);
   const [loading,   setLoading]      = useState({});
+  const router = useRouter()
 
   const friends = [
     ...requests.sent
@@ -59,7 +61,9 @@ export function FriendsList() {
                 transition={{ delay: i * 0.05 }}
                 className="flex items-center justify-between py-3 px-4 bg-background border border-border rounded-sm hover:border-border-game transition-colors duration-150"
               >
-                <div className="flex items-center gap-3 min-w-0">
+                <button 
+                onClick={()=>router.push(`/player/${friend.displayUsername}`)}
+                className="flex items-center gap-3 min-w-0 cursor-pointer">
                   <div className="relative">
                     <div className="w-10 h-10 rounded-sm bg-card border border-border flex items-center justify-center text-xl shrink-0">
                       {avatar.icon}
@@ -76,7 +80,7 @@ export function FriendsList() {
                       </span>
                     )}
                   </div>
-                </div>
+                </button>
                 <div className="flex items-center gap-2 shrink-0">
                   <button
                     onClick={() => setChatWith(friend)}

@@ -7,11 +7,13 @@ import { acceptFriendRequest, rejectFriendRequest } from "@/lib/friendsService";
 import { GlowButton }            from "@/components/ui/GlowButton";
 import { PresenceDot }           from "@/components/friends/PresenceDot";
 import { getAvatar }             from "@/lib/avatars";
+import { useRouter } from "next/navigation";
 
 export function FriendRequests() {
   const { user }               = useAuthStore();
   const { requests, users }    = useFriendsStore(); // ← from store
   const [loading, setLoading]  = useState({});
+  const router = useRouter()
 
   function getUser(uid) {
     return users.find((u) => u.uid === uid);
@@ -57,7 +59,9 @@ export function FriendRequests() {
                   transition={{ delay: i * 0.05 }}
                   className="flex items-center justify-between py-3 gap-3"
                 >
-                  <div className="flex items-center gap-3 min-w-0">
+                  <button 
+                  onClick={()=>router.push(`/player/${friend.displayUsername}`)}
+                  className="flex items-center gap-3 min-w-0 cursor-pointer">
                     <div className="relative">
                       <div className="w-10 h-10 rounded-sm bg-card border border-border flex items-center justify-center text-xl shrink-0">
                         {avatar.icon}
@@ -74,7 +78,7 @@ export function FriendRequests() {
                         </span>
                       )}
                     </div>
-                  </div>
+                  </button>
                   <div className="flex gap-2">
                     <GlowButton
                       className="text-[10px] py-1 px-3"
@@ -117,14 +121,16 @@ export function FriendRequests() {
                   transition={{ delay: i * 0.05 }}
                   className="flex items-center justify-between py-3 gap-3"
                 >
-                  <div className="flex items-center gap-3">
+                  <button 
+                  onClick={()=>router.push(`/player/${friend.displayUsername}`)}
+                  className="flex items-center gap-3 cursor-pointer">
                     <div className="w-10 h-10 rounded-sm bg-card border border-border flex items-center justify-center text-xl shrink-0">
                       {avatar.icon}
                     </div>
                     <span className="font-mono text-xs text-foreground">
                       {u?.displayUsername ?? "Unknown"}
                     </span>
-                  </div>
+                  </button>
                   <span className="font-mono text-[10px] text-muted-foreground border border-border-game px-2 py-1 rounded-sm">
                     Pending
                   </span>

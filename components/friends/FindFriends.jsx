@@ -105,7 +105,7 @@ export function FindFriends() {
               >
                 <button
                   onClick={() => router.push(`/player/${u.username}`)}
-                  className="flex items-center gap-3 min-w-0 hover:opacity-80 transition-opacity"
+                  className="flex items-center gap-3 min-w-0 hover:opacity-80 transition-opacity cursor-pointer"
                 >
                   <div className="relative">
                     <div className="w-10 h-10 rounded-sm bg-card border border-border flex items-center justify-center text-xl shrink-0">

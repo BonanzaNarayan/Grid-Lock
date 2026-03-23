@@ -6,7 +6,7 @@ import { PresenceDot }     from "@/components/friends/PresenceDot";
 import { GlowButton }      from "@/components/ui/GlowButton";
 import { getLevelProgress, getTotalXP } from "@/lib/levelService";
 
-export function ProfileHeader({ profile, isOwnProfile, onAddFriend, onChallenge, friendStatus }) {
+export function ProfileHeader({ profile, isOwnProfile, onAddFriend, friendStatus }) {
   const avatar   = getAvatar(profile.avatarId);
   const xp       = getTotalXP(profile.stats);
   const { level, progress, xpNeeded } = getLevelProgress(xp);
@@ -65,33 +65,6 @@ export function ProfileHeader({ profile, isOwnProfile, onAddFriend, onChallenge,
             <p className="font-sans text-sm text-muted-foreground max-w-md leading-relaxed">
               {profile.bio}
             </p>
-          )}
-
-          {/* actions */}
-          {!isOwnProfile && (
-            <div className="flex gap-2 mt-1 flex-wrap">
-              {friendStatus === "accepted" ? (
-                <GlowButton
-                  variant="primary"
-                  className="text-xs py-1.5 px-4"
-                  onClick={onChallenge}
-                >
-                  ⚔ Challenge
-                </GlowButton>
-              ) : friendStatus === "pending" ? (
-                <span className="font-mono text-xs text-muted-foreground border border-border-game px-3 py-1.5 rounded-sm">
-                  Request Sent
-                </span>
-              ) : (
-                <GlowButton
-                  variant="ghost"
-                  className="text-xs py-1.5 px-4"
-                  onClick={onAddFriend}
-                >
-                  + Add Friend
-                </GlowButton>
-              )}
-            </div>
           )}
         </div>
       </div>
