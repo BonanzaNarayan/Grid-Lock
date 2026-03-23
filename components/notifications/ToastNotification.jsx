@@ -5,13 +5,13 @@ import { useNotificationStore } from "@/store/useNotificationStore";
 import { X }                    from "lucide-react";
 
 const TYPE_STYLES = {
-  friend_request: { icon: "👥", accent: "border-accent-game/50  bg-accent-game/5"  },
-  friend_accepted:{ icon: "✅", accent: "border-primary/50      bg-primary/5"      },
-  new_message:    { icon: "💬", accent: "border-primary/50      bg-primary/5"      },
-  room_invite:    { icon: "🎮", accent: "border-primary/50      bg-primary/5"      },
+  friend_request: { icon: "👥", accent: "border-accent-game/50  bg-accent-game/30"  },
+  friend_accepted:{ icon: "✅", accent: "border-primary/50      bg-primary/30"      },
+  new_message:    { icon: "💬", accent: "border-primary/50      bg-primary/30"      },
+  room_invite:    { icon: "🎮", accent: "border-primary/50      bg-primary/30"      },
   room_joined:    { icon: "⚡", accent: "border-accent-game/50  bg-accent-game/5"  },
-  challenge:      { icon: "⚔️", accent: "border-primary/50      bg-primary/5"      },
-  level_up:       { icon: "🏆", accent: "border-yellow-400/50   bg-yellow-400/5"   },
+  challenge:      { icon: "⚔️", accent: "border-primary/50      bg-primary/30"      },
+  level_up:       { icon: "🏆", accent: "border-yellow-400/50   bg-yellow-400/30"   },
 };
 
 export function ToastNotification({ toast }) {
@@ -33,7 +33,7 @@ export function ToastNotification({ toast }) {
       animate={{ opacity: 1, x: 0,   scale: 1    }}
       exit={{   opacity: 0, x: 80,   scale: 0.95 }}
       transition={{ type: "spring", stiffness: 340, damping: 30 }}
-      className={`relative flex items-start gap-3 bg-card border rounded-sm p-4 shadow-2xl cursor-pointer w-80 overflow-hidden ${style.accent}`}
+      className={`relative bg-card flex items-start gap-3 border rounded-sm p-4 shadow-2xl cursor-pointer w-80 overflow-hidden ${style.accent}`}
       onClick={handleClick}
     >
       {/* progress bar */}
