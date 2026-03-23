@@ -8,7 +8,7 @@ export function ToastStack() {
 
   return (
     <div
-      className="fixed z-[200] flex flex-col gap-3"
+      className="fixed z-200 flex flex-col gap-3"
       style={{
         top:   "max(1rem, env(safe-area-inset-top))",
         right: "max(1rem, env(safe-area-inset-right))",

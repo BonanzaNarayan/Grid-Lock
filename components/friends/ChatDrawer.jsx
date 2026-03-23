@@ -49,7 +49,7 @@ export function ChatDrawer({ friend, onClose }) {
             animate={{ opacity: 1 }}
             exit={{   opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 z-[60] bg-background/60 backdrop-blur-sm md:hidden"
+            className="fixed inset-0 z-60 bg-background/60 backdrop-blur-sm md:hidden"
           />
 
           {/* drawer — above backdrop + above bottom nav */}
@@ -59,7 +59,7 @@ export function ChatDrawer({ friend, onClose }) {
             exit={{   x: "100%"   }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
             className={`
-              fixed right-0 top-0 z-[70]
+              fixed right-0 top-0 z-70
               w-full max-w-sm
               bg-background border-l border-border
               flex flex-col shadow-2xl

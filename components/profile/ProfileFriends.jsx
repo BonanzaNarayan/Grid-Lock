@@ -93,7 +93,7 @@ export function ProfileFriends({ uid }) {
                 <div className="w-10 h-10 rounded-sm bg-background border border-border group-hover:border-primary flex items-center justify-center text-xl transition-colors duration-150">
                   {avatar.icon}
                 </div>
-                <span className="font-mono text-[9px] text-muted-foreground group-hover:text-primary transition-colors duration-150 max-w-[40px] truncate">
+                <span className="font-mono text-[9px] text-muted-foreground group-hover:text-primary transition-colors duration-150 max-w-10 truncate">
                   {f.displayUsername}
                 </span>
               </motion.button>

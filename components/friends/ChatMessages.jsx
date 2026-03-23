@@ -164,7 +164,7 @@ export function ChatMessages({ chatId, toUser }) {
               {isMe ? "YOU" : toUser?.displayUsername?.toUpperCase()}
             </span>
             <div
-              className={`max-w-xs px-3 py-2 rounded-sm font-mono text-xs leading-relaxed break-words ${
+              className={`max-w-xs px-3 py-2 rounded-sm font-mono text-xs leading-relaxed wrap-break-word ${
                 isMe
                   ? "bg-primary text-primary-foreground"
                   : "bg-card border border-border text-foreground"

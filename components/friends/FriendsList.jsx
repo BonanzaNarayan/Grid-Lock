@@ -75,7 +75,7 @@ export function FriendsList() {
                       {friend.displayUsername}
                     </span>
                     {friend.bio && (
-                      <span className="font-mono text-[10px] text-muted-foreground truncate max-w-[160px]">
+                      <span className="font-mono text-[10px] text-muted-foreground truncate max-w-40">
                         {friend.bio}
                       </span>
                     )}
