@@ -9,11 +9,13 @@ import {
 import { getAvatar } from "@/lib/avatars";
 import { Globe } from "lucide-react";
 import { NotificationBell } from "@/components/notifications/NotificationBell";
+import { MessageSquare } from "lucide-react";
 
 const links = [
   { label: "Play",     href: "/dashboard",          icon: Gamepad2  },
   { label: "Friends",  href: "/dashboard/friends",   icon: Users     },
   { label: "Rooms",  href: "/dashboard/rooms",   icon: Globe     },
+  { label: "Chat",     href: "/dashboard/chat",      icon: MessageSquare },
   { label: "Stats",    href: "/dashboard/stats",     icon: BarChart2 },
   { label: "Settings", href: "/dashboard/settings",  icon: Settings  },
 ];
